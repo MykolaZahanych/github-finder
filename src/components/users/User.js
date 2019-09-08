@@ -1,22 +1,27 @@
-import React, { useEffect, Fragment } from 'react'
-import { Link } from 'react-router-dom'
-import Spinner from '../layout/Spinner'
-import Repos from '../repos/Repos'
-import PropTypes from 'prop-types'
+  
+import React, { Fragment, useEffect, useContext } from 'react';
+import Spinner from '../layout/Spinner';
+import Repos from '../repos/Repos';
+import { Link } from 'react-router-dom';
+import GithubContext from '../../context/github/githubContext';
 
-const User = ({ user, loading, getUser, getUserRepos, repos, match }) => {
+const User = ({ match }) => {
+  const githubContext = useContext(GithubContext);
+
+  const { getUser, loading, user, repos, getUserRepos } = githubContext;
+
   useEffect(() => {
-    getUser(match.params.login)
-    getUserRepos(match.params.login)
+    getUser(match.params.login);
+    getUserRepos(match.params.login);
     // eslint-disable-next-line
-  }, [])
+  }, []);
 
   const {
     name,
+    company,
     avatar_url,
     location,
     bio,
-    company,
     blog,
     login,
     html_url,
@@ -25,16 +30,14 @@ const User = ({ user, loading, getUser, getUserRepos, repos, match }) => {
     public_repos,
     public_gists,
     hireable
-  } = user
+  } = user;
 
-  if (loading) {
-    return <Spinner />
-  }
+  if (loading) return <Spinner />;
 
   return (
     <Fragment>
       <Link to='/' className='btn btn-light'>
-        Back to Search
+        Back To Search
       </Link>
       Hireable:{' '}
       {hireable ? (
@@ -67,24 +70,23 @@ const User = ({ user, loading, getUser, getUserRepos, repos, match }) => {
             <li>
               {login && (
                 <Fragment>
-                  <strong>Username: </strong>
-                  {login}
+                  <strong>Username: </strong> {login}
                 </Fragment>
               )}
             </li>
+
             <li>
               {company && (
                 <Fragment>
-                  <strong>Company: </strong>
-                  {company}
+                  <strong>Company: </strong> {company}
                 </Fragment>
               )}
             </li>
+
             <li>
               {blog && (
                 <Fragment>
-                  <strong>Website: </strong>
-                  {blog}
+                  <strong>Website: </strong> {blog}
                 </Fragment>
               )}
             </li>
@@ -99,15 +101,7 @@ const User = ({ user, loading, getUser, getUserRepos, repos, match }) => {
       </div>
       <Repos repos={repos} />
     </Fragment>
-  )
-}
+  );
+};
 
-User.propTypes = {
-  loading: PropTypes.bool.isRequired,
-  user: PropTypes.object.isRequired,
-  getUser: PropTypes.func.isRequired,
-  getUserRepos: PropTypes.func.isRequired,
-  repos: PropTypes.array.isRequired
-}
-
-export default User
+export default User;
